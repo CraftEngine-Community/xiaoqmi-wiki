@@ -5,8 +5,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'XiaoQMi Wiki',
-  tagline: 'idk what is this',
+  title: "XiaoQMi's Wiki",
+  tagline: 'All In One Wiki for Everyone',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -22,8 +22,8 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'iqtesterr', // Usually your GitHub org/user name.
-  projectName: 'craft-engine-tutorial', // Usually your repo name.
+  organizationName: 'CraftEngine-Community', // Usually your GitHub org/user name.
+  projectName: 'xiaoqmi-wiki', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -46,21 +46,7 @@ const config: Config = {
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -75,21 +61,40 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'My Site',
+      title: "XiaoQMi's Wiki",
       logo: {
-        alt: 'My Site Logo',
+        alt: 'XiaoQMi Wiki Logo',
         src: 'img/logo.svg',
       },
       items: [
         {
+          label: "Projects",
+          position: 'left',
+          items: [
+            {
+              label: 'CE Extension',
+              to: '/projects/ce-extension/',
+            },
+          ],
+        },
+        {
+          label: "Tutorials",
+          position: 'left',
+          items: [
+            {
+              label: 'CraftEngine',
+              to: '/tutorials/craftengine/',
+            },
+          ],
+        },
+        {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Guide',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/CraftEngine-Community/xiaoqmi-wiki',
           label: 'GitHub',
           position: 'right',
         },
@@ -99,44 +104,37 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Projects',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
+              label: 'CE Extension',
+              to: '/projects/ce-extension/',
             },
           ],
+        },
+        {
+          title: 'Tutorials',
+          items: [
+            {
+              label: 'CraftEngine',
+              to: '/tutorials/craftengine/',
+            },
+          ],
+
         },
         {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
               label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              href: 'https://discord.com/invite/xiaomomi',
             },
             {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              label: 'Github',
+              href: 'https://github.com/CraftEngine-Community/xiaoqmi-ce-extension',
             },
           ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
-            },
-          ],
-        },
+        }
       ],
       copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
     },
@@ -150,19 +148,19 @@ const config: Config = {
   [
     '@docusaurus/plugin-content-docs',
     {
-      id: 'projects',
-      path: 'projects',
-      routeBasePath: 'projects',
-      sidebarPath: './sidebars/projects.ts',
-    },
+      id: 'projects_ce-extension',
+      path: 'projects/ce-extension',
+      routeBasePath: 'projects/ce-extension',
+      sidebarPath: './sidebars/ce-extension.ts',
+    }
   ],
   [
     '@docusaurus/plugin-content-docs',
     {
-      id: 'tutorials',
-      path: 'tutorials',
-      routeBasePath: 'tutorials',
-      sidebarPath: './sidebars/tutorials.ts',
+      id: 'tutorials_craftengine',
+      path: 'tutorials/craftengine',
+      routeBasePath: 'tutorials/craftengine',
+      sidebarPath: './sidebars/craftengine.ts',
     },
   ],
 ],
