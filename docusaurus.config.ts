@@ -14,6 +14,10 @@ const config: Config = {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
   },
 
+  clientModules: [
+    require.resolve('./src/clientModules/mouseTrail.ts'),
+  ],
+
   // Set the production url of your site here
   url: 'https://wiki.xiaoqmi.com',
   // Set the /<baseUrl>/ pathname under which your site is served
