@@ -59,8 +59,8 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    // We may need a social card in future, but as of now it is much faster to not have one.
+    // image: 'img/xxx.jpg',
     colorMode: {
       respectPrefersColorScheme: true,
     },

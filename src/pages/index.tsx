@@ -18,11 +18,13 @@ function HomepageHeader() {
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          <Link
+          <button
             className="button button--secondary button--lg"
-            to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
-          </Link>
+            onClick={() => {
+              alert("Donation link coming soon!")
+            }}>
+            Donation 💖
+          </button>
         </div>
       </div>
     </header>
