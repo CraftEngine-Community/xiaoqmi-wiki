@@ -11,35 +11,23 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Projects',
+    Svg: require('@site/static/img/home_book.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Discover documentation for community projects, all maintained and updated in one place.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Tutorials',
+    Svg: require('@site/static/img/home_dashboard.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Follow step-by-step tutorials to quickly learn and master the projects you care about.
       </>
     ),
-  },
-  {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    description: (
-      <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
-      </>
-    ),
-  },
+  }
 ];
 
 function Feature({title, Svg, description}: FeatureItem) {
@@ -60,7 +48,7 @@ export default function HomepageFeatures(): ReactNode {
   return (
     <section className={styles.features}>
       <div className="container">
-        <div className="row">
+        <div className={clsx('row', styles.featureRow)}>
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}

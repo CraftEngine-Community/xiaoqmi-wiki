@@ -92,12 +92,6 @@ const config: Config = {
           ],
         },
         {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
-          position: 'left',
-          label: 'Guide',
-        },
-        {
           href: 'https://github.com/CraftEngine-Community/xiaoqmi-wiki',
           label: 'GitHub',
           position: 'right',
@@ -140,7 +134,7 @@ const config: Config = {
           ],
         }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} XiaoQMi's Wiki.`,
     },
     prism: {
       theme: prismThemes.github,

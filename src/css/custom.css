@@ -100,3 +100,16 @@ html[data-theme='light'] .mc-glass-particle-idle {
     display: none;
   }
 }
+
+.footer__links {
+  display: flex;
+  justify-content: center;
+  gap: 18rem;
+}
+
+.footer__col {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: none;
+  text-align: left;
+}
