@@ -1,0 +1,91 @@
+/* XiaoQMi custom DocSearch modal */
+.DocSearch-Container {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  pointer-events: none !important;
+}
+
+.DocSearch-Modal {
+  pointer-events: auto !important;
+  position: fixed !important;
+  top: 72px;
+  left: 50%;
+  right: auto !important;
+  bottom: auto !important;
+  width: min(calc(100vw - 32px), 700px) !important;
+  margin: 0 !important;
+  transform: translateX(-50%);
+  border: 2px solid var(--ifm-color-emphasis-400);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+}
+
+.DocSearch-Modal:focus-within {
+  border-color: var(--ifm-color-primary);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--ifm-color-primary) 25%, transparent),
+    0 18px 60px rgba(0, 0, 0, 0.35);
+}
+
+.DocSearch-Modal[data-dragging='true'] {
+  user-select: none;
+}
+
+.xqm-docsearch-titlebar {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: grab;
+  padding: 0 10px 0 12px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
+}
+
+.xqm-docsearch-titlebar:active {
+  cursor: grabbing;
+}
+
+.xqm-docsearch-titlebar-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.xqm-docsearch-titlebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.xqm-docsearch-drag-hint {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.xqm-docsearch-close {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+  line-height: 1;
+  font-size: 18px;
+}
+
+.xqm-docsearch-close:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+@media (max-width: 750px) {
+  .DocSearch-Modal {
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+    transform: none !important;
+  }
+}
