@@ -1,5 +1,7 @@
 import React, {useEffect, useMemo} from 'react';
+import Link from '@docusaurus/Link';
 import {useLocation} from '@docusaurus/router';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import * as OriginalSearchBarModule from '@theme-original/SearchBar';
 
 const OriginalSearchBar =
@@ -17,6 +19,7 @@ type StoredModalPosition = {
 };
 
 const DOCSEARCH_POSITION_STORAGE_KEY = 'xqm-docsearch-modal-position';
+const DEFAULT_SEARCH_PAGE_PATH = 'search';
 
 function escapeAlgoliaFilterValue(value: string) {
   return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
@@ -82,9 +85,119 @@ function focusDocSearchInput() {
   const input = document.querySelector<HTMLInputElement>('.DocSearch-Input');
 
   if (input) {
-    input.focus();
-    input.select();
+    input.focus({preventScroll: true});
+    const caretPosition = input.value.length;
+
+    input.setSelectionRange(caretPosition, caretPosition);
   }
+}
+
+function focusDocSearchInputWithoutMovingCaret(input: HTMLInputElement) {
+  input.focus({preventScroll: true});
+}
+
+type StableResultsFooterProps = {
+  state: {
+    query?: string;
+    collections?: Array<{
+      items?: Array<{
+        type?: string;
+      }>;
+    }>;
+  };
+  searchPagePath: string;
+};
+
+const latestSearchResultCounts = new Map<string, number>();
+
+function getQueryFromSearchRequest(request: any) {
+  if (typeof request?.query === 'string') {
+    return request.query;
+  }
+
+  const params = request?.params;
+
+  if (typeof params === 'string') {
+    return new URLSearchParams(params).get('query') ?? '';
+  }
+
+  if (typeof params?.query === 'string') {
+    return params.query;
+  }
+
+  return '';
+}
+
+function recordSearchResultCounts(requests: any, response: any) {
+  const requestList = Array.isArray(requests) ? requests : requests?.requests;
+  const results = response?.results;
+
+  if (!Array.isArray(requestList) || !Array.isArray(results)) {
+    return;
+  }
+
+  const countsByQuery = new Map<string, number>();
+
+  results.forEach((result: any, index: number) => {
+    const query =
+      typeof result?.query === 'string'
+        ? result.query
+        : getQueryFromSearchRequest(requestList[index]);
+    const nbHits = typeof result?.nbHits === 'number' ? result.nbHits : 0;
+
+    if (!query) {
+      return;
+    }
+
+    countsByQuery.set(query, (countsByQuery.get(query) ?? 0) + nbHits);
+  });
+
+  countsByQuery.forEach((count, query) => {
+    latestSearchResultCounts.set(query, count);
+  });
+}
+
+function getVisibleResultCount(state: StableResultsFooterProps['state']) {
+  return (
+    state.collections?.reduce((total, collection) => {
+      const items = collection.items ?? [];
+
+      return (
+        total +
+        items.filter((item) => item.type !== 'askAI').length
+      );
+    }, 0) ?? 0
+  );
+}
+
+function StableResultsFooter({state, searchPagePath}: StableResultsFooterProps) {
+  const searchPageLink = useBaseUrl(searchPagePath);
+  const searchLink = state.query
+    ? `${searchPageLink}${searchPageLink.includes('?') ? '&' : '?'}q=${encodeURIComponent(state.query)}`
+    : searchPageLink;
+  const resultCount =
+    state.query && latestSearchResultCounts.has(state.query)
+      ? latestSearchResultCounts.get(state.query)
+      : getVisibleResultCount(state);
+
+  return (
+    <Link to={searchLink} onClick={closeDocSearch}>
+      See all {resultCount} results
+    </Link>
+  );
+}
+
+function createResultCountSearchClient(searchClient: any) {
+  return {
+    ...searchClient,
+    search(requests: any, requestOptions: any) {
+      return searchClient.search(requests, requestOptions).then((response: any) => {
+        recordSearchResultCounts(requests, response);
+
+        return response;
+      });
+    },
+  };
 }
 
 function readStoredModalPosition(): StoredModalPosition | null {
@@ -187,15 +300,51 @@ function useDocSearchEnhancer() {
       }
 
       if (!modal.dataset.positionReady) {
-        modal.dataset.positionReady = 'true';
-
         const storedPosition = readStoredModalPosition();
 
         if (storedPosition) {
-          requestAnimationFrame(() => {
-            applyModalPosition(modal, storedPosition);
-          });
+          applyModalPosition(modal, storedPosition);
         }
+
+        modal.dataset.positionReady = 'true';
+      }
+
+      const input = modal.querySelector<HTMLInputElement>('.DocSearch-Input');
+
+      if (input && !input.dataset.selectionReady) {
+        input.dataset.selectionReady = 'true';
+        focusDocSearchInputWithoutMovingCaret(input);
+      }
+
+      if (!modal.dataset.focusReady) {
+        modal.dataset.focusReady = 'true';
+
+        modal.addEventListener('pointerdown', (event) => {
+          const target = event.target as HTMLElement;
+
+          if (
+            target.closest('a, button, input, textarea, select') ||
+            target.closest('.xqm-docsearch-titlebar')
+          ) {
+            return;
+          }
+
+          event.preventDefault();
+          focusDocSearchInput();
+        });
+
+        modal.addEventListener('click', (event) => {
+          const target = event.target as HTMLElement;
+
+          if (
+            target.closest('a, button, input, textarea, select') ||
+            target.closest('.xqm-docsearch-titlebar')
+          ) {
+            return;
+          }
+
+          focusDocSearchInput();
+        });
       }
 
       if (!titlebar.dataset.dragReady) {
@@ -255,7 +404,7 @@ function useDocSearchEnhancer() {
       }
 
       enhancementQueued = true;
-      requestAnimationFrame(() => {
+      queueMicrotask(() => {
         enhancementQueued = false;
         enhanceModal();
       });
@@ -272,8 +421,8 @@ function useDocSearchEnhancer() {
 
   // Ctrl/Cmd + K behavior:
   // closed => let DocSearch open normally
-  // opened but input not selected => focus/select input
-  // opened and selected => close
+  // opened but input not focused => focus input
+  // opened and input focused => close
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const isSearchShortcut =
@@ -298,16 +447,10 @@ function useDocSearchEnhancer() {
         return;
       }
 
-      const inputIsFocused = document.activeElement === input;
-      const inputIsFullySelected =
-        input.value.length === 0 ||
-        (input.selectionStart === 0 && input.selectionEnd === input.value.length);
-
-      if (inputIsFocused && inputIsFullySelected) {
+      if (document.activeElement === input) {
         closeDocSearch();
       } else {
-        input.focus();
-        input.select();
+        focusDocSearchInput();
       }
     };
 
@@ -319,24 +462,28 @@ function useDocSearchEnhancer() {
   }, []);
 }
 
-function useRefreshOpenDocSearch(filters: string | undefined) {
-  useEffect(() => {
-    const modal = document.querySelector<HTMLElement>('.DocSearch-Modal');
-    const input = modal?.querySelector<HTMLInputElement>('.DocSearch-Input');
-
-    if (!input) {
-      return;
-    }
-
-    input.dispatchEvent(new Event('input', {bubbles: true}));
-  }, [filters]);
-}
-
 export default function SearchBar(props: any) {
   const {pathname} = useLocation();
 
   const scope = useMemo(() => getScopeFromPathname(pathname), [pathname]);
   useDocSearchEnhancer();
+
+  const searchPagePath =
+    typeof props.searchPagePath === 'string'
+      ? props.searchPagePath
+      : DEFAULT_SEARCH_PAGE_PATH;
+
+  const resultsFooterComponent = useMemo(
+    () =>
+      props.resultsFooterComponent ??
+      ((footerProps: {state: StableResultsFooterProps['state']}) => (
+        <StableResultsFooter
+          state={footerProps.state}
+          searchPagePath={searchPagePath}
+        />
+      )),
+    [props.resultsFooterComponent, searchPagePath],
+  );
 
   const filters = useMemo(() => {
     if (!scope) {
@@ -346,11 +493,22 @@ export default function SearchBar(props: any) {
     return `searchScope:"${escapeAlgoliaFilterValue(scope.searchScope)}"`;
   }, [scope]);
 
-  useRefreshOpenDocSearch(filters);
+  const transformSearchClient = useMemo(
+    () => (searchClient: any) => {
+      const transformedSearchClient = props.transformSearchClient
+        ? props.transformSearchClient(searchClient)
+        : searchClient;
+
+      return createResultCountSearchClient(transformedSearchClient);
+    },
+    [props.transformSearchClient],
+  );
 
   return (
     <OriginalSearchBar
       {...props}
+      resultsFooterComponent={resultsFooterComponent}
+      transformSearchClient={transformSearchClient}
       searchParameters={{
         ...props.searchParameters,
         ...(filters ? {filters} : {}),
