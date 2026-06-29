@@ -258,10 +258,21 @@ function applyModalPosition(modal: HTMLElement, position: StoredModalPosition) {
   return nextPosition;
 }
 
+function clearDocSearchBackdrop(container: HTMLElement) {
+  container.style.background = 'transparent';
+  container.style.backgroundColor = 'transparent';
+  container.style.backdropFilter = 'none';
+}
+
 function useDocSearchEnhancer() {
   useEffect(() => {
     const enhanceModal = () => {
       const modal = document.querySelector<HTMLElement>('.DocSearch-Modal');
+      const container = document.querySelector<HTMLElement>('.DocSearch-Container');
+
+      if (container) {
+        clearDocSearchBackdrop(container);
+      }
 
       if (!modal) {
         return;
