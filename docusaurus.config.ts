@@ -154,7 +154,8 @@ const config: Config = {
       apiKey: 'c93205c7effd9f6cd9d50c77f8195fa2',
       indexName: 'XiaoCrawler',
       askAi: {
-        assistantId: 'YOUR_ASSISTANT_ID',
+        assistantId: 'f82569a2-f3a8-4aaa-a5a4-dc3a0634f12a',
+        agentStudio: true,
         sidePanel: true,
       },
       contextualSearch: true,
