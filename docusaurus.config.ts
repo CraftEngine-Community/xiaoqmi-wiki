@@ -4,6 +4,17 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+const githubEditUrl = 'https://github.com/CraftEngine-Community/xiaoqmi-wiki/edit/main';
+
+type EditUrlParams = {
+  versionDocsDirPath: string;
+  docPath: string;
+};
+
+function getEditUrl({versionDocsDirPath, docPath}: EditUrlParams) {
+  return `${githubEditUrl}/${versionDocsDirPath}/${docPath}`;
+}
+
 const config: Config = {
   title: "XiaoQMi's Wiki",
   tagline: 'All-in-One Wiki for Everyone',
@@ -45,10 +56,9 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: getEditUrl,
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
         },
         blog: false,
         theme: {
@@ -192,6 +202,9 @@ const config: Config = {
       path: 'projects/ce-extension',
       routeBasePath: 'projects/ce-extension',
       sidebarPath: './sidebars/ce-extension.ts',
+      editUrl: getEditUrl,
+      showLastUpdateAuthor: true,
+      showLastUpdateTime: true,
     }
   ],
   [
@@ -201,6 +214,9 @@ const config: Config = {
       path: 'tutorials/craftengine',
       routeBasePath: 'tutorials/craftengine',
       sidebarPath: './sidebars/craftengine.ts',
+      editUrl: getEditUrl,
+      showLastUpdateAuthor: true,
+      showLastUpdateTime: true,
     },
   ],
 ],
