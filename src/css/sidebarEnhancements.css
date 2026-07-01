@@ -408,8 +408,8 @@ html[data-xqm-doc-font='reading'] {
 }
 
 .xqm-sidebar-enhanced .menu__caret {
-  width: 0.9rem !important;
-  min-width: 0.9rem !important;
+  width: 1.12rem !important;
+  min-width: 1.12rem !important;
   height: 1.35rem;
   padding: 0 !important;
   opacity: 1;
@@ -424,16 +424,15 @@ html[data-xqm-doc-font='reading'] {
 
 .xqm-sidebar-enhanced .menu__caret::before,
 .xqm-sidebar-enhanced .menu__link--sublist-caret::after {
-  width: 0.82rem !important;
-  min-width: 0.82rem !important;
-  height: 0.82rem !important;
-  background-size: 0.82rem 0.82rem !important;
-  opacity: 0.46;
-}
-
-.xqm-sidebar-enhanced .menu__link--sublist-caret::after {
+  width: 1.06rem !important;
+  min-width: 1.06rem !important;
+  height: 1.06rem !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1.06rem 1.06rem !important;
+  opacity: 0.5;
   margin-left: auto !important;
-  margin-right: -0.24rem;
+  margin-right: -0.34rem;
 }
 
 .xqm-sidebar-enhanced .menu__caret:hover,

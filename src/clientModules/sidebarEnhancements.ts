@@ -24,9 +24,9 @@ const KEY_FADING_CLASS = 'xqm-sidebar-key-fading';
 let selectedItemKey: string | null = null;
 
 const ACCENT_OPTIONS: AccentOption[] = [
-  {name: 'Mint', value: '#25c2a0'},
-  {name: 'Violet', value: '#9b7cff'},
   {name: 'Sky', value: '#4da3ff'},
+  {name: 'Violet', value: '#9b7cff'},
+  {name: 'Mint', value: '#25c2a0'},
   {name: 'Rose', value: '#ff6b91'},
   {name: 'Amber', value: '#f6b64b'},
 ];
