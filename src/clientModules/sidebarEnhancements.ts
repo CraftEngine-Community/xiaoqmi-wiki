@@ -19,6 +19,7 @@ const OPEN_MENU_CLASS = 'xqm-sidebar-menu-open';
 const SCROLLING_CLASS = 'xqm-sidebar-scrolling';
 const SIDEBAR_SHELL_CLASS = 'xqm-sidebar-shell';
 const KEY_ACTIVE_CLASS = 'xqm-sidebar-key-active';
+const KEY_FADING_CLASS = 'xqm-sidebar-key-fading';
 
 let selectedItemKey: string | null = null;
 
@@ -499,22 +500,38 @@ function selectActiveItem(nav: HTMLElement) {
   activeItem.classList.add(SELECTED_ITEM_CLASS);
 }
 
-let keyActiveTimer: number | undefined;
+let keyFadeTimer: number | undefined;
 
-function markKeyboardActive() {
-  document
-    .querySelectorAll<HTMLElement>('.xqm-sidebar-enhanced')
-    .forEach((nav) => nav.classList.add(KEY_ACTIVE_CLASS));
+function getEnhancedSidebarNavs() {
+  return Array.from(document.querySelectorAll<HTMLElement>('.xqm-sidebar-enhanced'));
+}
 
-  if (keyActiveTimer) {
-    window.clearTimeout(keyActiveTimer);
+function showKeyboardSelection() {
+  if (keyFadeTimer) {
+    window.clearTimeout(keyFadeTimer);
   }
 
-  keyActiveTimer = window.setTimeout(() => {
-    document
-      .querySelectorAll<HTMLElement>('.xqm-sidebar-enhanced')
-      .forEach((nav) => nav.classList.remove(KEY_ACTIVE_CLASS));
-  }, 1600);
+  getEnhancedSidebarNavs().forEach((nav) => {
+    nav.classList.add(KEY_ACTIVE_CLASS);
+    nav.classList.remove(KEY_FADING_CLASS);
+  });
+}
+
+function fadeKeyboardSelection() {
+  getEnhancedSidebarNavs().forEach((nav) => {
+    nav.classList.remove(KEY_ACTIVE_CLASS);
+    nav.classList.add(KEY_FADING_CLASS);
+  });
+
+  if (keyFadeTimer) {
+    window.clearTimeout(keyFadeTimer);
+  }
+
+  keyFadeTimer = window.setTimeout(() => {
+    getEnhancedSidebarNavs().forEach((nav) => {
+      nav.classList.remove(KEY_FADING_CLASS);
+    });
+  }, 1000);
 }
 
 function getSelectedItem() {
@@ -744,6 +761,11 @@ function setupKeyboardNavigation() {
       return;
     }
 
+    if (event.key === 'Control' && !event.altKey && !event.metaKey && !event.shiftKey) {
+      showKeyboardSelection();
+      return;
+    }
+
     if (!event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) {
       return;
     }
@@ -757,7 +779,7 @@ function setupKeyboardNavigation() {
     }
 
     event.preventDefault();
-    markKeyboardActive();
+    showKeyboardSelection();
 
     if (event.key === 'ArrowUp') {
       selectRelativeItem(-1);
@@ -781,6 +803,14 @@ function setupKeyboardNavigation() {
 
     openSelectedItem();
   });
+
+  document.addEventListener('keyup', (event) => {
+    if (event.key === 'Control') {
+      fadeKeyboardSelection();
+    }
+  });
+
+  window.addEventListener('blur', fadeKeyboardSelection);
 
   document.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
