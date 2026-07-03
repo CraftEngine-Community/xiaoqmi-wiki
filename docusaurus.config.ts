@@ -59,12 +59,7 @@ const config: Config = {
     [
       'classic',
       {
-        docs: {
-          sidebarPath: './sidebars.ts',
-          editUrl: getEditUrl,
-          showLastUpdateAuthor: true,
-          showLastUpdateTime: true,
-        },
+        docs: false,
         blog: false,
         theme: {
           customCss: [
@@ -109,6 +104,10 @@ const config: Config = {
               to: '/tutorials/craftengine/',
             },
           ],
+        },
+        {
+          type: 'localeDropdown',
+          position: 'right',
         },
         {
           href: 'https://github.com/CraftEngine-Community/xiaoqmi-wiki',
@@ -207,7 +206,7 @@ const config: Config = {
       id: 'projects_ce-extension',
       path: 'projects/ce-extension',
       routeBasePath: 'projects/ce-extension',
-      sidebarPath: './sidebars/ce-extension.ts',
+      sidebarPath: './projects/ce-extension/sidebars.ts',
       editUrl: getEditUrl,
       showLastUpdateAuthor: true,
       showLastUpdateTime: true,
@@ -219,7 +218,7 @@ const config: Config = {
       id: 'tutorials_craftengine',
       path: 'tutorials/craftengine',
       routeBasePath: 'tutorials/craftengine',
-      sidebarPath: './sidebars/craftengine.ts',
+      sidebarPath: './tutorials/craftengine/sidebars.ts',
       editUrl: getEditUrl,
       showLastUpdateAuthor: true,
       showLastUpdateTime: true,

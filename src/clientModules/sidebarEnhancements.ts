@@ -649,15 +649,22 @@ function navigateSelectionRight() {
 function openSelectedItem() {
   const selected = getSelectedItem();
   const link = selected ? getItemLink(selected) : null;
+  const selectedCategory = selected?.matches('.theme-doc-sidebar-item-category')
+    ? selected
+    : null;
+
+  if (
+    selectedCategory &&
+    link?.matches('.menu__link--active, [aria-current="page"]')
+  ) {
+    toggleCategory(selectedCategory);
+    return;
+  }
 
   if (link) {
     link.click();
     return;
   }
-
-  const selectedCategory = selected?.matches('.theme-doc-sidebar-item-category')
-    ? selected
-    : null;
 
   if (selectedCategory) {
     toggleCategory(selectedCategory);
